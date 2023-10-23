@@ -1,10 +1,20 @@
-def hello():
-    return "Hello, World!"
+def index():
+    if request.method == "POST":
+        attributes = [
+            'movement_reactions', 'mentality_composure', 'passing',
+            'release_clause_eur', 'dribbling', 'wage_eur', 'power_shot_power',
+            'value_eur', 'mentality_vision', 'attacking_short_passing',
+            'physic', 'skill_long_passing', 'age'
+        ]
 
-def content():
-    return '''
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            '''
+        input_data = {}
+        for attr in attributes:
+            value = float(request.form.get(attr, 0))
+            input_data[attr] = value
+
+        prediction = ensemble.predict([list(input_data.values())])
+        prediction = round(prediction[0])
+
+        return render_template("result.html", prediction=prediction)
+
+    return render_template("form.html")
